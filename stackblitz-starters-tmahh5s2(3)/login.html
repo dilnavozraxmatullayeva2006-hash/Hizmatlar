@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Kirish — Hizmatlar</title>
+        <link rel="stylesheet" href="styles.css">
+        </head>
+
+        <body>
+
+        <header class="header">
+
+          <a href="index.html" class="logo">
+              Hizmatlar
+                </a>
+
+                  <nav class="nav">
+                      <a href="index.html">Bosh sahifa</a>
+                          <a href="doctor.html">Shifokor</a>
+                              <a href="lawyer.html">Advokat</a>
+                                  <a href="state.html">Davlat xizmatlari</a>
+                                    </nav>
+
+                                    </header>
+
+                                    <main>
+
+                                    <section class="services-section">
+
+                                      <div class="section-header">
+
+                                          <div class="section-label">
+                                                HIZMATLAR
+                                                    </div>
+
+                                                        <h1>🔐 Tizimga kirish</h1>
+
+                                                            <p>
+                                                                  Hisobingizga kirib barcha xizmatlardan foydalaning.
+                                                                      </p>
+
+                                                                        </div>
+
+                                                                          <form
+                                                                              class="form"
+                                                                                  id="loginForm"
+                                                                                    >
+
+                                                                                        <label>
+                                                                                              Telefon raqam
+                                                                                                  </label>
+
+                                                                                                      <input
+                                                                                                            type="tel"
+                                                                                                                  id="loginPhone"
+                                                                                                                        placeholder="+998 90 123 45 67"
+                                                                                                                              required
+                                                                                                                                  >
+
+                                                                                                                                      <label>
+                                                                                                                                            Parol
+                                                                                                                                                </label>
+
+                                                                                                                                                    <input
+                                                                                                                                                          type="password"
+                                                                                                                                                                id="loginPassword"
+                                                                                                                                                                      placeholder="Parolingiz"
+                                                                                                                                                                            required
+                                                                                                                                                                                >
+
+                                                                                                                                                                                    <button
+                                                                                                                                                                                          type="submit"
+                                                                                                                                                                                                class="btn"
+                                                                                                                                                                                                    >
+                                                                                                                                                                                                          🔐 Kirish
+                                                                                                                                                                                                              </button>
+
+                                                                                                                                                                                                                  <p>
+                                                                                                                                                                                                                        Hisobingiz yo‘qmi?
+                                                                                                                                                                                                                              <a href="register.html" style="color:#2563eb">
+                                                                                                                                                                                                                                      Ro‘yxatdan o‘ting
+                                                                                                                                                                                                                                            </a>
+                                                                                                                                                                                                                                                </p>
+
+                                                                                                                                                                                                                                                    <div id="loginResult"></div>
+
+                                                                                                                                                                                                                                                      </form>
+
+                                                                                                                                                                                                                                                      </section>
+
+                                                                                                                                                                                                                                                      </main>
+<footer class="footer">
+
+    <div class="footer-content">
+
+        <div class="footer-about">
+
+              <div class="footer-logo">
+                      Hizmatlar
+                            </div>
+
+                                  <p>
+                                          Barcha xizmatlar bir joyda.
+                                                </p>
+
+                                                    </div>
+
+                                                        <div class="footer-column">
+
+                                                              <h4>Xizmatlar</h4>
+
+                                                                    <a href="doctor.html">Shifokor</a>
+                                                                          <a href="lawyer.html">Advokat</a>
+                                                                                <a href="state.html">Davlat xizmatlari</a>
+
+                                                                                    </div>
+
+                                                                                      </div>
+
+                                                                                        <div class="footer-bottom">
+                                                                                            © 2026 Hizmatlar
+                                                                                              </div>
+
+                                                                                              </footer>
+
+                                                                                              <script>
+
+                                                                                              document
+                                                                                                .getElementById("loginForm")
+                                                                                                  .addEventListener("submit", function(e) {
+
+                                                                                                      e.preventDefault();
+
+                                                                                                          const phone =
+                                                                                                                document.getElementById("loginPhone").value;
+
+                                                                                                                    localStorage.setItem(
+                                                                                                                          "hizmatlarUser",
+                                                                                                                                phone
+                                                                                                                                    );
+
+                                                                                                                                        document.getElementById("loginResult").innerHTML =
+                                                                                                                                              `
+                                                                                                                                                    <div class="notice">
+                                                                                                                                                            ✅ Muvaffaqiyatli kirildi!
+                                                                                                                                                                    <br><br>
+                                                                                                                                                                            Profilingizga yo‘naltirilmoqda...
+                                                                                                                                                                                  </div>
+                                                                                                                                                                                        `;
+
+                                                                                                                                                                                            setTimeout(function() {
+                                                                                                                                                                                                  window.location.href = "profile.html";
+                                                                                                                                                                                                      }, 800);
+
+                                                                                                                                                                                                        });
+
+                                                                                                                                                                                                        </script>
+
+                                                                                                                                                                                                        </body>
+                                                                                                                                                                                                        </html>                                                                                                                                                                                                                                                

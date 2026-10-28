@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Uy-joy | Hizmatlar</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}
+header{background:#fff;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px #0001}
+.logo{font-size:23px;font-weight:bold;color:#315bea;text-decoration:none}
+nav a{margin-left:12px;text-decoration:none;color:#333}
+main{max-width:1000px;margin:auto;padding:20px}
+h1,h2{text-align:center}
+.form,.ad{background:#fff;padding:20px;margin:18px 0;border-radius:18px;box-shadow:0 4px 15px #0001}
+label{display:block;font-weight:bold;margin-top:10px}
+input,select,textarea{width:100%;padding:12px;margin:6px 0 10px;border:1px solid #ddd;border-radius:9px;font-size:15px}
+button{width:100%;padding:14px;background:#315bea;color:#fff;border:0;border-radius:10px;font-size:16px;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+.ad img{width:100%;height:220px;object-fit:cover;border-radius:12px}
+.badge{display:inline-block;padding:6px 10px;background:#e7f7ed;color:#16823a;border-radius:15px}
+.success{background:#e8f7ed;color:#16823a;padding:12px;border-radius:10px;margin-top:12px}
+.error{background:#ffeaea;color:#c00;padding:12px;border-radius:10px;margin-top:12px}
+#preview img{width:80px;height:65px;object-fit:cover;margin:4px;border-radius:7px}
+@media(max-width:650px){
+.grid{grid-template-columns:1fr}
+nav{display:none}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<a class="logo" href="index.html">
+Hizmatlar
+</a>
+
+<nav>
+<a href="index.html">Bosh sahifa</a>
+<a href="car.html">Avtomobil</a>
+</nav>
+
+</header>
+
+<main>
+
+<h1>🏠 Uy-joy e'loni</h1>
+
+<div class="form">
+
+<label>🏷 E'lon turi</label>
+<select id="houseAction">
+<option value="Sotiladi">Sotiladi</option>
+<option value="Ijaraga beriladi">Ijaraga beriladi</option>
+</select>
+
+<label>🏠 Uy turi</label>
+<select id="houseKind">
+<option value="Uy">Uy</option>
+<option value="Hovli">Hovli</option>
+<option value="Kvartira">Kvartira</option>
+<option value="Villa">Villa</option>
+<option value="Dala hovli">Dala hovli</option>
+<option value="Yer uchastkasi">Yer uchastkasi</option>
+</select>
+
+<label>🛏 Xonalar soni</label>
+<input id="houseRooms" type="number" placeholder="Masalan: 4">
+
+<label>📐 Uy maydoni</label>
+<input id="houseArea" type="number" placeholder="m²">
+
+<label>🌳 Yer maydoni</label>
+<input id="houseLand" type="number" placeholder="Sotix">
+
+<label>🏢 Qavat</label>
+<input id="houseFloor" type="number" placeholder="Masalan: 3">
+
+<label>🏢 Jami qavat</label>
+<input id="houseFloors" type="number" placeholder="Masalan: 5">
+
+<label>🏗 Ta'miri</label>
+<select id="houseRepair">
+<option>Yangi ta'mir</option>
+<option>Yaxshi ta'mir</option>
+<option>O'rtacha ta'mir</option>
+<option>Ta'mirsiz</option>
+</select>
+
+<label>🔥 Isitish turi</label>
+<select id="houseHeating">
+<option>Gaz</option>
+<option>Elektr</option>
+<option>Markaziy isitish</option>
+<option>Gaz + Elektr</option>
+<option>Ko'mir</option>
+<option>O'tin</option>
+</select>
+
+<label>🛋 Mebel</label>
+<select id="houseFurniture">
+<option>To'liq jihozlangan</option>
+<option>Qisman jihozlangan</option>
+<option>Jihozlanmagan</option>
+</select>
+
+<label>💧 Suv</label>
+<select id="houseWater">
+<option>Bor</option>
+<option>Yo'q</option>
+</select>
+
+<label>⚡ Elektr</label>
+<select id="houseElectric">
+<option>Bor</option>
+<option>Yo'q</option>
+</select>
+
+<label>🔥 Gaz</label>
+<select id="houseGas">
+<option>Bor</option>
+<option>Yo'q</option>
+</select>
+
+<label>🚽 Kanalizatsiya</label>
+<select id="houseSewer">
+<option>Bor</option>
+<option>Yo'q</option>
+</select>
+
+<label>📍 Manzil</label>
+<input id="houseLocation" type="text"
+placeholder="Viloyat, tuman, mahalla">
+
+<label>💰 Narxi</label>
+<input id="housePrice" type="text"
+placeholder="Masalan: 850 000 000 so'm">
+
+<label>📞 Telefon</label>
+<input id="housePhone" type="tel"
+placeholder="+998 90 123 45 67">
+
+<label>📷 Rasmlar</label>
+<input id="houseImages" type="file"
+accept="image/*" multiple>
+
+<div id="preview"></div>
+
+<label>📝 Qo'shimcha ma'lumot</label>
+<textarea id="houseDescription"
+rows="4"
+placeholder="Uy haqida qo'shimcha ma'lumot..."></textarea>
+
+<button type="button" id="addHouseButton">
+➕ E'lonni joylashtirish
+</button>
+
+<div id="message"></div>
+
+</div>
+
+
+<h2>🏠 Joylashtirilgan uylar</h2>
+
+<input id="houseSearch"
+placeholder="🔎 Manzil, uy turi yoki narx bo'yicha qidirish">
+
+<div id="houseList" class="grid"></div>
+
+</main>
+
+
+<script>
+
+let housePhotos = [];
+
+
+/* RASMLARNI TANLASH */
+
+document
+.getElementById("houseImages")
+.addEventListener("change", function(e){
+
+housePhotos = [];
+
+const preview =
+document.getElementById("preview");
+
+preview.innerHTML = "";
+
+const files =
+Array.from(e.target.files).slice(0,5);
+
+files.forEach(function(file){
+
+const reader =
+new FileReader();
+
+reader.onload =
+function(event){
+
+housePhotos.push(
+event.target.result
+);
+
+const img =
+document.createElement("img");
+
+img.src =
+event.target.result;
+
+preview.appendChild(img);
+
+};
+
+reader.readAsDataURL(file);
+
+});
+
+});
+
+
+/* SAQLANGAN E'LONLAR */
+
+function getHouses(){
+
+try{
+
+const saved =
+localStorage.getItem("houses");
+
+if(!saved){
+return [];
+}
+
+const data =
+JSON.parse(saved);
+
+return Array.isArray(data)
+? data
+: [];
+
+}catch(error){
+
+return [];
+
+}
+
+}
+
+
+/* E'LONNI SAQLASH */
+
+document
+.getElementById("addHouseButton")
+.addEventListener("click", function(){
+
+const action =
+document.getElementById("houseAction").value;
+
+const kind =
+document.getElementById("houseKind").value;
+
+const rooms =
+document.getElementById("houseRooms").value;
+
+const area =
+document.getElementById("houseArea").value;
+
+const land =
+document.getElementById("houseLand").value;
+
+const floor =
+document.getElementById("houseFloor").value;
+
+const floors =
+document.getElementById("houseFloors").value;
+
+const repair =
+document.getElementById("houseRepair").value;
+
+const heating =
+document.getElementById("houseHeating").value;
+
+const furniture =
+document.getElementById("houseFurniture").value;
+
+const water =
+document.getElementById("houseWater").value;
+
+const electric =
+document.getElementById("houseElectric").value;
+
+const gas =
+document.getElementById("houseGas").value;
+
+const sewer =
+document.getElementById("houseSewer").value;
+
+const address =
+document.getElementById("houseLocation").value.trim();
+
+const price =
+document.getElementById("housePrice").value.trim();
+
+const phone =
+document.getElementById("housePhone").value.trim();
+
+const description =
+document.getElementById("houseDescription").value.trim();
+
+
+/* MAJBURIY MAYDONLAR */
+
+if(!address || !price){
+
+document.getElementById("message").innerHTML =
+'<div class="error">❌ Manzil va narxni kiriting.</div>';
+
+return;
+
+}
+
+
+/* YANGI E'LON */
+
+const newHouse = {
+
+id: Date.now(),
+
+action: action,
+
+kind: kind,
+
+rooms: rooms,
+
+area: area,
+
+land: land,
+
+floor: floor,
+
+floors: floors,
+
+repair: repair,
+
+heating: heating,
+
+furniture: furniture,
+
+water: water,
+
+electric: electric,
+
+gas: gas,
+
+sewer: sewer,
+
+address: address,
+
+price: price,
+
+phone: phone,
+
+description: description,
+
+images: housePhotos
+
+};
+
+
+/* ESKI E'LONLARNI OLISH */
+
+const houses =
+getHouses();
+
+houses.push(newHouse);
+
+
+/* SAQLASH */
+
+try{
+
+localStorage.setItem(
+"houses",
+JSON.stringify(houses)
+);
+
+}catch(error){
+
+document.getElementById("message").innerHTML =
+'<div class="error">❌ Rasm hajmi katta. Kichikroq rasm tanlang.</div>';
+
+return;
+
+}
+
+
+/* MUVAFFAQIYAT */
+
+document.getElementById("message").innerHTML =
+'<div class="success">✅ E\'lon muvaffaqiyatli saqlandi va joylandi!</div>';
+
+
+/* FORMANI TOZALASH */
+
+document
+.getElementById("houseRooms").value = "";
+
+document
+.getElementById("houseArea").value = "";
+
+document
+.getElementById("houseLand").value = "";
+
+document
+.getElementById("houseFloor").value = "";
+
+document
+.getElementById("houseFloors").value = "";
+
+document
+.getElementById("houseLocation").value = "";
+
+document
+.getElementById("housePrice").value = "";
+
+document
+.getElementById("housePhone").value = "";
+
+document
+.getElementById("houseDescription").value = "";
+
+document
+.getElementById("houseImages").value = "";
+
+document
+.getElementById("preview").innerHTML = "";
+
+housePhotos = [];
+
+
+/* E'LONNI DARHOL KO'RSATISH */
+
+showHouses();
+
+});
+
+
+/* E'LONLARNI KO'RSATISH */
+
+function showHouses(){
+
+const list =
+document.getElementById("houseList");
+
+const search =
+document.getElementById("houseSearch")
+.value
+.toLowerCase()
+.trim();
+
+const houses =
+getHouses();
+
+
+const filtered =
+houses.filter(function(house){
+
+const text = (
+
+house.action + " " +
+house.kind + " " +
+house.address + " " +
+house.price
+
+).toLowerCase();
+
+return text.includes(search);
+
+});
+
+
+if(filtered.length === 0){
+
+list.innerHTML =
+"<p>Hozircha e'lon topilmadi.</p>";
+
+return;
+
+}
+
+
+list.innerHTML =
+filtered.map(function(house){
+
+const image =
+house.images &&
+house.images.length
+? `<img src="${house.images[0]}">`
+: `<div style="font-size:70px;text-align:center;padding:30px">🏠</div>`;
+
+
+return `
+
+<div class="ad">
+
+${image}
+
+<h2>${house.kind}</h2>
+
+<span class="badge">
+${house.action}
+</span>
+
+<p>🛏 Xonalar: ${house.rooms || "-"}</p>
+
+<p>📐 Maydon: ${house.area || "-"} m²</p>
+
+<p>🌳 Yer: ${house.land || "-"} sotix</p>
+
+<p>🏢 Qavat: ${house.floor || "-"}/${house.floors || "-"}</p>
+
+<p>🏗 Ta'mir: ${house.repair}</p>
+
+<p>🔥 Isitish: ${house.heating}</p>
+
+<p>🛋 Mebel: ${house.furniture}</p>
+
+<p>💧 Suv: ${house.water}</p>
+
+<p>⚡ Elektr: ${house.electric}</p>
+
+<p>🔥 Gaz: ${house.gas}</p>
+
+<p>🚽 Kanalizatsiya: ${house.sewer}</p>
+
+<p>📍 ${house.address}</p>
+
+<h2>💰 ${house.price}</h2>
+
+<p>📞 ${house.phone || "-"}</p>
+
+<p>${house.description || ""}</p>
+
+</div>
+
+`;
+
+}).join("");
+
+}
+
+
+/* QIDIRUV */
+
+document
+.getElementById("houseSearch")
+.addEventListener(
+"input",
+showHouses
+);
+
+
+/* SAHIFA OCHILGANDA SAQLANGANLARNI CHIQARISH */
+
+showHouses();
+
+</script>
+
+</body>
+</html>

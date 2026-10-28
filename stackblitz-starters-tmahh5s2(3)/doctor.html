@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shifokorga navbat | Hizmatlar</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial;background:#f4f7fb;color:#172033}
+header{background:#fff;padding:15px 20px;display:flex;justify-content:space-between;box-shadow:0 2px 10px #0001}
+.logo{font-size:23px;font-weight:bold;color:#315bea;text-decoration:none}
+nav a{margin-left:12px;text-decoration:none;color:#333}
+main{max-width:850px;margin:auto;padding:20px}
+.box{background:#fff;padding:20px;margin:18px 0;border-radius:18px;box-shadow:0 4px 15px #0001}
+h1,h2{text-align:center}
+label{display:block;font-weight:bold;margin-top:10px}
+input,select,textarea{width:100%;padding:13px;margin:6px 0 10px;border:1px solid #ddd;border-radius:10px;font-size:15px}
+button{width:100%;padding:14px;background:#315bea;color:white;border:0;border-radius:10px;font-size:16px}
+button:disabled{background:#aaa}
+.success,.error,.info{padding:13px;border-radius:10px;margin-top:10px}
+.success{background:#e7f8ed;color:#16823a}
+.error{background:#ffe8e8;color:#c00}
+.info{background:#eef3ff;color:#315bea}
+#times{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+.time{padding:10px;background:#e8f7ed;color:#16823a;border-radius:8px;text-align:center;cursor:pointer}
+.time.busy{background:#eee;color:#999;cursor:not-allowed}
+.time.selected{background:#315bea;color:#fff}
+@media(max-width:600px){#times{grid-template-columns:repeat(3,1fr)}nav{display:none}}
+</style>
+</head>
+
+<body>
+
+<header>
+<a class="logo" href="index.html">Hizmatlar</a>
+<nav>
+<a href="index.html">Bosh sahifa</a>
+<a href="housing.html">Uy-joy</a>
+</nav>
+</header>
+
+<main>
+
+<h1>👨‍⚕️ Shifokorga navbat</h1>
+
+<div class="box">
+
+<label>👨‍⚕️ Shifokorni tanlang</label>
+<select id="doctor">
+<option value="">Shifokorlar yuklanmoqda...</option>
+</select>
+
+<label>📅 Sana</label>
+<input id="date" type="date">
+
+<label>🕐 Vaqtni tanlang</label>
+<div id="times"></div>
+
+<div id="timeInfo" class="info">
+Avval shifokor va sanani tanlang.
+</div>
+
+<label>👤 Bemor ismi</label>
+<input id="patient" placeholder="Ism va familiya">
+
+<label>📞 Telefon</label>
+<input id="phone" type="tel" placeholder="+998 90 123 45 67">
+
+<label>📝 Murojaat sababi</label>
+<textarea id="reason" rows="3" placeholder="Masalan: bosh og‘rig‘i..."></textarea>
+
+<button id="book">✅ NAVBAT OLISH</button>
+
+<div id="message"></div>
+
+</div>
+
+<div class="box">
+<h2>📋 Navbat ma'lumoti</h2>
+<div id="myAppointment">Hali navbat olinmagan.</div>
+</div>
+
+</main>
+
+<script>
+
+const URL="https://amntqkslllvuqzcatqvy.supabase.co";
+const KEY="sb_publishable_NQfFzfcqo4lfm6syCWezNg_O7sW4V88";
+const API=URL+"/rest/v1";
+const TG=URL+"/functions/v1/smart-endpoint";
+
+const H={
+  apikey:KEY,
+    Authorization:"Bearer "+KEY,
+      "Content-Type":"application/json"
+      };
+
+      const $=id=>document.getElementById(id);
+
+      let selectedTime="";
+
+      const slots=[
+      "09:00","09:30","10:00","10:30",
+      "11:00","11:30","12:00","12:30",
+      "14:00","14:30","15:00","15:30",
+      "16:00","16:30","17:00","17:30"
+      ];
+
+      const today=new Date().toISOString().split("T")[0];
+      $("date").min=today;
+
+
+      /* SHIFOKORLAR */
+
+      async function loadDoctors(){
+
+      try{
+
+      const r=await fetch(
+      API+"/doctors?select=id,name,specialty,phone&order=id",
+      {headers:H}
+      );
+
+      if(!r.ok)throw Error(await r.text());
+
+      const doctors=await r.json();
+
+      $("doctor").innerHTML=
+      '<option value="">Shifokorni tanlang</option>';
+
+      doctors.forEach(d=>{
+      const o=document.createElement("option");
+      o.value=d.id;
+      o.textContent=d.name+" — "+(d.specialty||"");
+      $("doctor").appendChild(o);
+      });
+
+      }catch(e){
+
+      console.error(e);
+
+      $("doctor").innerHTML=
+      '<option value="">Xatolik</option>';
+
+      $("message").innerHTML=
+      '<div class="error">❌ Shifokorlarni yuklab bo‘lmadi.</div>';
+
+      }
+
+      }
+
+
+      /* BO‘SH VAQTLAR */
+
+      async function loadTimes(){
+
+      selectedTime="";
+      $("times").innerHTML="";
+
+      const doctor=$("doctor").value;
+      const date=$("date").value;
+
+      if(!doctor||!date){
+      $("timeInfo").textContent="Avval shifokor va sanani tanlang.";
+      return;
+      }
+
+      $("timeInfo").textContent="Vaqtlar yuklanmoqda...";
+
+      try{
+
+      const url=
+      API+"/appointments?select=appointment_time"+
+      "&doctor_id=eq."+encodeURIComponent(doctor)+
+      "&appointment_date=eq."+encodeURIComponent(date);
+
+      const r=await fetch(url,{headers:H});
+
+      if(!r.ok)throw Error(await r.text());
+
+      const busy=(await r.json()).map(x=>
+      String(x.appointment_time).substring(0,5)
+      );
+
+      slots.forEach(t=>{
+
+      const d=document.createElement("div");
+      d.className="time";
+      d.textContent=t;
+
+      if(busy.includes(t)){
+
+      d.classList.add("busy");
+      d.textContent=t+" ❌";
+
+      }else{
+
+      d.onclick=()=>{
+
+      document.querySelectorAll(".time")
+      .forEach(x=>x.classList.remove("selected"));
+
+      d.classList.add("selected");
+      selectedTime=t;
+
+      $("timeInfo").textContent=
+      "✅ Tanlangan vaqt: "+t;
+
+      };
+
+      }
+
+      $("times").appendChild(d);
+
+      });
+
+      $("timeInfo").textContent=
+      "Bo‘sh vaqtlar: "+(slots.length-busy.length);
+
+      }catch(e){
+
+      console.error(e);
+      $("timeInfo").textContent=
+      "❌ Vaqtlarni yuklab bo‘lmadi.";
+
+      }
+
+      }
+
+
+      /* TELEGRAM */
+
+      async function sendTelegram(data){
+
+      const r=await fetch(TG,{
+      method:"POST",
+      headers:H,
+      body:JSON.stringify(data)
+      });
+
+      const text=await r.text();
+
+      console.log("Telegram:",text);
+
+      if(!r.ok)
+      throw Error("Telegram xatosi: "+r.status+" "+text);
+
+      }
+
+
+      /* NAVBAT */
+
+      async function bookAppointment(){
+
+      $("message").innerHTML="";
+
+      const doctor=$("doctor").value;
+      const option=$("doctor").selectedOptions[0];
+      const doctorName=option?.textContent||"";
+      const date=$("date").value;
+      const patient=$("patient").value.trim();
+      const phone=$("phone").value.trim();
+      const reason=$("reason").value.trim();
+
+      if(!doctor||!date||!selectedTime||!patient||!phone){
+
+      $("message").innerHTML=
+      '<div class="error">❌ Shifokor, sana, vaqt, ism va telefonni to‘ldiring.</div>';
+
+      return;
+      }
+
+      $("book").disabled=true;
+      $("book").textContent="Saqlanmoqda...";
+
+      try{
+
+      const appointment={
+      doctor_id:Number(doctor),
+      patient_name:patient,
+      patient_phone:phone,
+      appointment_date:date,
+      appointment_time:selectedTime,
+      reason,
+      status:"Kutilmoqda"
+      };
+
+      const r=await fetch(API+"/appointments",{
+      method:"POST",
+      headers:{...H,Prefer:"return=representation"},
+      body:JSON.stringify(appointment)
+      });
+
+      if(r.status===409){
+
+      $("message").innerHTML=
+      '<div class="error">❌ Bu vaqtni boshqa bemor oldi. Boshqa vaqt tanlang.</div>';
+
+      await loadTimes();
+      return;
+      }
+
+      if(!r.ok)throw Error(await r.text());
+
+      await r.json();
+
+      let telegramOK=false;
+
+      try{
+
+      await sendTelegram({
+      doctor_name: doctorName,
+      doctor_id: Number(doctor),
+      patient_name:patient,
+      patient_phone:phone,
+      appointment_date:date,
+      appointment_time:selectedTime,
+      reason
+      });
+
+      telegramOK=true;
+
+      }catch(e){
+
+      console.error("Telegram:",e);
+
+      }
+
+      $("message").innerHTML=telegramOK
+      ?'<div class="success">✅ Navbat muvaffaqiyatli olindi!<br>📲 Telegram xabari yuborildi.</div>'
+      :'<div class="success">✅ Navbat muvaffaqiyatli olindi!<br>⚠️ Navbat saqlandi, lekin Telegram xabari yuborilmadi.</div>';
+
+
+      $("myAppointment").innerHTML=`
+
+      <div class="info">
+
+      <b>✅ Navbat ma'lumotlari</b>
+
+      <p>👨‍⚕️ ${doctorName}</p>
+      <p>👤 ${patient}</p>
+      <p>📞 ${phone}</p>
+      <p>📅 ${date}</p>
+      <p>🕐 ${selectedTime}</p>
+      <p>📝 ${reason||"Ko‘rsatilmagan"}</p>
+      <p>Holati: <b>Kutilmoqda</b></p>
+
+      </div>
+      `;
+
+
+      $("patient").value="";
+      $("phone").value="";
+      $("reason").value="";
+
+      await loadTimes();
+
+      }catch(e){
+
+      console.error(e);
+
+      $("message").innerHTML=
+      '<div class="error">❌ Navbat saqlanmadi. Xatolik yuz berdi.</div>';
+
+      }finally{
+
+      $("book").disabled=false;
+      $("book").textContent="✅ NAVBAT OLISH";
+
+      }
+
+      }
+
+
+      /* EVENTLAR */
+
+      $("doctor").onchange=loadTimes;
+      $("date").onchange=loadTimes;
+      $("book").onclick=bookAppointment;
+
+      loadDoctors();
+
+      </script>
+
+      </body>
+      </html>
